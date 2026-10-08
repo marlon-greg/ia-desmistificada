@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>IA desmistificada · material da palestra “IA por dentro”</title>
+<meta name="description" content="Material aberto da palestra IA por dentro (ADS · FATEC Indaiatuba): apostila, passo a passo do Teachable Machine, guia do Desafio Gandalf, trilhas de estudo e glossário.">
+<meta name="theme-color" content="#0b1020">
+<meta property="og:title" content="IA desmistificada">
+<meta property="og:description" content="Como a IA prevê, aprende, pode ser enganada e por que inventa coisas. Apostila, práticas e trilhas de estudo gratuitas.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%A0%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    --bg: #f6f7fb; --surface: #fff; --surface-2: #eef1f7; --ink: #0f172a; --ink-2: #475569; --line: #dfe4ee;
+    --accent: #e8590c; --accent-ink: #fff; --accent-soft: #fff1e8; --ok: #15803d; --ok-soft: #e7f6ec;
+    --b1: #2563eb; --b2: #7c3aed; --b3: #db2777; --b4: #0891b2;
+    --radius: 16px;
+    --font-h: "Space Grotesk", system-ui, sans-serif;
+    --font-b: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b1020; --surface: #141a2e; --surface-2: #1c2440; --ink: #eef2ff; --ink-2: #a5b0cc; --line: #2a3352;
+      --accent: #ff7a2f; --accent-ink: #160a02; --accent-soft: #2a1a10; --ok: #4ade80; --ok-soft: #0f2a1a;
+      --b1: #60a5fa; --b2: #a78bfa; --b3: #f472b6; --b4: #22d3ee;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-b); line-height: 1.6; font-size: 17px; }
+  h1, h2, h3 { font-family: var(--font-h); line-height: 1.15; letter-spacing: -0.01em; margin: 0; }
+  a { color: var(--accent); }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+  /* hero */
+  .hero { background: linear-gradient(140deg, #0b1020 0%, #18204a 55%, #3a1d3f 100%); color: #eef2ff; padding: 64px 0 56px; position: relative; overflow: hidden; }
+  .hero::after { content: ""; position: absolute; width: 520px; height: 520px; right: -180px; top: -200px; border-radius: 50%; background: radial-gradient(circle, rgba(255,122,47,.45), transparent 65%); }
+  .hero .wrap { position: relative; z-index: 1; }
+  .eyebrow { color: #ffb38a; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; font-size: 13px; }
+  .hero h1 { font-size: clamp(40px, 8vw, 72px); margin: 12px 0 14px; color: #fff; }
+  .hero h1 b { color: #ff8a4c; }
+  .hero p.lead { color: #c7cfe8; font-size: clamp(18px, 2.4vw, 21px); max-width: 52ch; margin: 0; }
+  .hero .by { margin-top: 20px; color: #a5b0cc; font-size: 15px; }
+  .hero .by a { color: #fff; font-weight: 600; }
+  .cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 20px; border-radius: 12px; font-weight: 700; text-decoration: none; font-size: 16px; }
+  .btn.pri { background: #ff7a2f; color: #160a02; }
+  .btn.sec { background: rgba(255,255,255,.1); color: #fff; border: 1px solid rgba(255,255,255,.22); }
+
+  nav.toc { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  nav.toc .wrap { display: flex; gap: 4px; overflow-x: auto; padding-block: 10px; scrollbar-width: none; }
+  nav.toc a { white-space: nowrap; text-decoration: none; color: var(--ink-2); font-weight: 600; font-size: 14px; padding: 6px 12px; border-radius: 99px; }
+  nav.toc a:hover, nav.toc a.on { background: var(--surface-2); color: var(--ink); }
+
+  section { padding-top: 56px; scroll-margin-top: 60px; }
+  .kick { font-family: var(--font-h); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--c, var(--accent)); }
+  h2 { font-size: clamp(28px, 4.6vw, 38px); margin: 6px 0 12px; }
+  h3 { font-size: 21px; margin: 26px 0 8px; }
+  .lead2 { font-size: 19px; color: var(--ink-2); max-width: 62ch; margin-top: 0; }
+
+  /* cards de material */
+  .docs { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 18px; }
+  .doc { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; display: flex; flex-direction: column; border-top: 6px solid var(--c); }
+  .doc .ic { font-size: 34px; line-height: 1; }
+  .doc h3 { margin: 12px 0 6px; font-size: 20px; }
+  .doc p { color: var(--ink-2); margin: 0 0 16px; font-size: 16px; flex: 1; }
+  .doc .meta { font-size: 13px; color: var(--ink-2); font-weight: 600; margin-bottom: 12px; }
+  .doc a.dl { align-self: flex-start; background: var(--c); color: #fff; padding: 10px 16px; border-radius: 10px; font-weight: 700; text-decoration: none; font-size: 15px; }
+  @media (prefers-color-scheme: dark) { .doc a.dl { color: #0b1020; } }
+
+  /* fio condutor */
+  .thread { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 16px 0 6px; }
+  .thread span { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 8px 14px; font-weight: 600; font-size: 15px; }
+  .thread i { font-style: normal; color: var(--ink-2); font-weight: 700; }
+  .blocks { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-top: 18px; }
+  .block { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; position: relative; }
+  .block .n { font-family: var(--font-h); font-size: 44px; font-weight: 700; color: var(--c); line-height: 1; }
+  .block h3 { font-size: 19px; margin: 8px 0 6px; }
+  .block p { font-size: 15px; color: var(--ink-2); margin: 0 0 10px; }
+  .block .tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 99px; background: var(--surface-2); color: var(--c); }
+  .c1 { --c: var(--b1); } .c2 { --c: var(--b2); } .c3 { --c: var(--b3); } .c4 { --c: var(--b4); } .c5 { --c: var(--accent); }
+
+  /* pratique */
+  .practice { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-top: 16px; }
+  .pcard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; border-left: 6px solid var(--c); }
+  .pcard h3 { margin: 0 0 6px; }
+  .pcard p { color: var(--ink-2); font-size: 16px; margin: 0 0 12px; }
+  .pcard a { font-weight: 700; overflow-wrap: anywhere; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); background: var(--surface-2); }
+  .tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); margin-top: 14px; }
+
+  .tracks { display: grid; gap: 16px; margin-top: 18px; }
+  .track { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; border-top: 6px solid var(--c); }
+  .track .when { font-size: 13px; font-weight: 700; color: var(--c); text-transform: uppercase; letter-spacing: .08em; }
+  .track h3 { margin-top: 4px; }
+  .track ul { padding-left: 20px; margin-bottom: 0; }
+  .track li { margin: 6px 0; }
+  .pt { display: inline-block; font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; background: var(--ok-soft); color: var(--ok); }
+  .en { display: inline-block; font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; background: var(--surface-2); color: var(--ink-2); }
+  .proj { background: var(--surface-2); border-radius: 12px; padding: 12px 14px; margin-top: 12px; font-size: 16px; }
+
+  details { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; margin: 10px 0; }
+  details summary { font-weight: 700; cursor: pointer; }
+  dl.gloss { display: grid; grid-template-columns: minmax(130px, 210px) 1fr; gap: 10px 18px; margin: 12px 0 0; }
+  dl.gloss dt { font-weight: 700; }
+  dl.gloss dd { margin: 0; color: var(--ink-2); }
+  @media (max-width: 560px) { dl.gloss { grid-template-columns: 1fr; } dl.gloss dd { margin-bottom: 8px; } }
+  ul.refs { padding-left: 20px; } ul.refs li { margin: 8px 0; word-break: break-word; }
+
+  .star { margin-top: 64px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: space-between; }
+  .star h2 { font-size: 26px; margin: 0 0 4px; }
+  .star p { margin: 0; color: var(--ink-2); }
+  .star .btn { background: var(--ink); color: var(--bg); }
+  footer { border-top: 1px solid var(--line); margin-top: 48px; padding: 28px 0 44px; color: var(--ink-2); font-size: 14px; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Material aberto · palestra “IA por dentro”</div>
+    <h1>IA <b>desmistificada</b></h1>
+    <p class="lead">O que acontece de verdade dentro de uma inteligência artificial: como ela prevê, como aprende, como pode ser enganada e por que às vezes inventa coisas com toda a confiança.</p>
+    <div class="cta">
+      <a class="btn pri" href="pdf/apostila-ia-desmistificada.pdf">📘 Baixar a apostila</a>
+      <a class="btn sec" href="#praticas">🧪 Ver as práticas</a>
+    </div>
+    <div class="by">Semana de Tecnologia · Análise e Desenvolvimento de Sistemas · FATEC Indaiatuba · outubro de 2026 · <a href="https://github.com/marlon-greg">Prof. Marlon Greg</a></div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Seções"><div class="wrap">
+  <a href="#materiais">Materiais</a>
+  <a href="#ideia">A ideia central</a>
+  <a href="#blocos">Os 4 blocos</a>
+  <a href="#praticas">Pratique em casa</a>
+  <a href="#dev">IA no dia a dia</a>
+  <a href="#trilhas">Trilhas</a>
+  <a href="#glossario">Glossário</a>
+  <a href="#refs">Referências</a>
+</div></nav>
+
+<main class="wrap">
+
+<!-- ================================================================ MATERIAIS -->
+<section id="materiais" class="c5">
+  <div class="kick">Comece por aqui</div>
+  <h2>Materiais para baixar</h2>
+  <p class="lead2">Tudo foi escrito para quem quer aprender — estando ou não na palestra. Gratuito, em português, para ler no celular ou imprimir.</p>
+  <div class="docs">
+    <article class="doc c5">
+      <div class="ic">📘</div>
+      <h3>Apostila IA desmistificada</h3>
+      <p>Os 4 blocos explicados do zero: tokens e temperatura, treino e viés, prompt injection, alucinação. Com exercícios e respostas comentadas.</p>
+      <div class="meta">PDF · 21 páginas</div>
+      <a class="dl" href="pdf/apostila-ia-desmistificada.pdf">Abrir PDF</a>
+    </article>
+    <article class="doc c2">
+      <div class="ic">🖐️</div>
+      <h3>Passo a passo · Teachable Machine</h3>
+      <p>Treine sua própria IA de visão pela webcam, sem código. Inclui o experimento de viés, ajustes avançados e como colocar o modelo num site.</p>
+      <div class="meta">PDF · 13 páginas</div>
+      <a class="dl" href="pdf/passo-a-passo-teachable-machine.pdf">Abrir PDF</a>
+    </article>
+    <article class="doc c3">
+      <div class="ic">🧙</div>
+      <h3>Guia · Desafio Gandalf</h3>
+      <p>O que cada nível do desafio defendia, por que cada defesa caiu e como se protege uma aplicação real contra prompt injection.</p>
+      <div class="meta">PDF · 9 páginas</div>
+      <a class="dl" href="pdf/guia-desafio-gandalf.pdf">Abrir PDF</a>
+    </article>
+  </div>
+</section>
+
+<!-- ================================================================ IDEIA -->
+<section id="ideia" class="c5">
+  <div class="kick">O fio condutor</div>
+  <h2>Toda IA aprende padrões para prever a próxima coisa</h2>
+  <p class="lead2">A próxima palavra. O próximo pixel. A próxima jogada. Essa ideia simples explica ao mesmo tempo as forças e os limites da IA — e liga tudo o que vimos.</p>
+  <div class="thread"><span>📚 Muitos exemplos</span><i>→</i><span>🧮 Ajuste de padrões (treino)</span><i>→</i><span>🔮 Previsão sobre algo novo</span></div>
+</section>
+
+<!-- ================================================================ BLOCOS -->
+<section id="blocos">
+  <div class="kick">A palestra em 4 perguntas</div>
+  <h2>Cada bloco responde uma e puxa a próxima</h2>
+  <div class="blocks">
+    <div class="block c1"><div class="n">1</div><h3>Como a IA prevê</h3><p>Um modelo de linguagem calcula a probabilidade da próxima palavra. A temperatura decide o quanto ele arrisca; o contexto muda tudo.</p><span class="tag">Votação ao vivo</span></div>
+    <div class="block c2"><div class="n">2</div><h3>Como a IA aprende</h3><p>Os padrões vêm dos dados. Dados pouco variados ensinam a coisa errada — isso é viés. Modelo bom vem de dados bons.</p><span class="tag">Teachable Machine</span></div>
+    <div class="block c3"><div class="n">3</div><h3>Como enganar a IA</h3><p>Se ela só segue padrões, um texto bem escrito pode passar por cima das regras. Isso é prompt injection, o risco nº 1 do OWASP.</p><span class="tag">Desafio Gandalf</span></div>
+    <div class="block c4"><div class="n">4</div><h3>Quando a IA erra</h3><p>Ela prevê o texto mais plausível, não o mais verdadeiro. Por isso inventa com confiança: alucinação. A IA rascunha, você verifica.</p><span class="tag">Verdade ou inventado?</span></div>
+  </div>
+</section>
+
+<!-- ================================================================ PRÁTICAS -->
+<section id="praticas" class="c5">
+  <div class="kick">Mão na massa</div>
+  <h2>Pratique em casa</h2>
+  <p class="lead2">As duas práticas da palestra, para refazer com calma — e ir além.</p>
+  <div class="practice">
+    <div class="pcard c2">
+      <h3>🖐️ Teachable Machine</h3>
+      <p>Ferramenta gratuita do Google para treinar modelos de imagem, som e pose no navegador. Siga o passo a passo e faça o experimento de viés.</p>
+      <a href="https://teachablemachine.withgoogle.com/" rel="noopener">teachablemachine.withgoogle.com ↗</a>
+    </div>
+    <div class="pcard c3">
+      <h3>🧙 Gandalf original (Lakera)</h3>
+      <p>O jogo que inspirou o desafio da palestra. Mesma missão — fazer o mago revelar a senha — com níveis extras. Continue praticando!</p>
+      <a href="https://gandalf.lakera.ai/" rel="noopener">gandalf.lakera.ai ↗</a>
+    </div>
+    <div class="pcard c1">
+      <h3>🔤 Veja um texto virar tokens</h3>
+      <p>Cole uma frase em inglês e a mesma em português e compare quantos tokens cada uma vira. Teste nomes, emojis e termos técnicos.</p>
+      <a href="https://tiktokenizer.vercel.app/" rel="noopener">tiktokenizer.vercel.app ↗</a>
+    </div>
+  </div>
+  <p style="color:var(--ink-2);font-size:15px;margin-top:16px">⚖️ Jogos como o Gandalf existem para ser atacados. Fora deles, só teste sistemas que você tem autorização, por escrito, para testar.</p>
+</section>
+
+<!-- ================================================================ DEV -->
+<section id="dev" class="c5">
+  <div class="kick">Na prática</div>
+  <h2>IA no dia a dia de quem desenvolve</h2>
+  <div class="tbl"><table>
+    <tr><th>Faça</th><th>Evite</th></tr>
+    <tr><td>Use IA para explicar código, gerar testes, revisar e acelerar tarefas repetitivas</td><td>Aceitar código que você não entende — no trabalho, o bug é seu</td></tr>
+    <tr><td>Dê contexto: linguagem, versão, objetivo, restrições, exemplos</td><td>Pedidos vagos (“faz um sistema”)</td></tr>
+    <tr><td>Peça alternativas e compare</td><td>Tratar a primeira resposta como a certa</td></tr>
+    <tr><td>Rode, teste e leia a documentação oficial</td><td>Confiar em nomes de funções e pacotes sem conferir</td></tr>
+    <tr><td>Remova dados pessoais e sigilosos antes de colar algo numa ferramenta pública (lembre da LGPD)</td><td>Colar dados de clientes, senhas, chaves de API ou código confidencial</td></tr>
+  </table></div>
+  <h3>Três coisas para levar</h3>
+  <ol>
+    <li><b>IA é copiloto, não piloto:</b> entenda cada linha que você aceitar.</li>
+    <li><b>Aprenda o que está por baixo:</b> dados, probabilidade, APIs.</li>
+    <li><b>Segurança desde o primeiro prompt.</b></li>
+  </ol>
+</section>
+
+<!-- ================================================================ TRILHAS -->
+<section id="trilhas" class="c5">
+  <div class="kick">Para onde ir agora</div>
+  <h2>Trilhas de aprendizagem</h2>
+  <p class="lead2">Escolha a etapa que combina com o seu momento no curso. Tudo gratuito. <span class="pt">PT</span> indica material em português.</p>
+  <div class="tracks">
+    <div class="track c1">
+      <div class="when">Etapa 1 · 1º e 2º semestres</div>
+      <h3>Fundamentos: entender a IA e programar em Python</h3>
+      <ul>
+        <li><b>Cursos de IA da Fundação Bradesco (Escola Virtual)</b> — introdutórios e com certificado. <span class="pt">PT</span> <a href="https://www.ev.org.br/" rel="noopener">ev.org.br</a></li>
+        <li><b>Escola Virtual.Gov</b> — busque por “Inteligência Artificial”. <span class="pt">PT</span> <a href="https://www.escolavirtual.gov.br/" rel="noopener">escolavirtual.gov.br</a></li>
+        <li><b>Microsoft AI for Beginners</b> — currículo completo, com tradução pt-BR. <span class="pt">PT</span> <a href="https://github.com/microsoft/AI-For-Beginners" rel="noopener">GitHub</a></li>
+        <li><b>Kaggle Learn · Python</b> — curto, prático, roda no navegador. <span class="en">EN</span> <a href="https://www.kaggle.com/learn" rel="noopener">kaggle.com/learn</a></li>
+        <li><b>Elements of AI</b> — conceitos de IA para iniciantes. <span class="en">EN</span> <a href="https://www.elementsofai.com/" rel="noopener">elementsofai.com</a></li>
+      </ul>
+      <div class="proj">🎯 <b>Projeto:</b> um classificador no Teachable Machine com 3 classes do seu dia a dia, com um relatório de onde ele erra e por quê.</div>
+    </div>
+    <div class="track c2">
+      <div class="when">Etapa 2 · 3º e 4º semestres</div>
+      <h3>Machine learning na prática</h3>
+      <ul>
+        <li><b>Google Machine Learning Crash Course</b> — com versão em português. <span class="pt">PT</span> <a href="https://developers.google.com/machine-learning/crash-course?hl=pt-br" rel="noopener">developers.google.com</a></li>
+        <li><b>Microsoft ML for Beginners</b> — 12 semanas de ML clássico, tradução pt-BR. <span class="pt">PT</span> <a href="https://github.com/microsoft/ML-For-Beginners" rel="noopener">GitHub</a></li>
+        <li><b>Kaggle Learn · Intro to Machine Learning</b> e <b>Pandas</b>. <span class="en">EN</span> <a href="https://www.kaggle.com/learn" rel="noopener">kaggle.com/learn</a></li>
+      </ul>
+      <div class="proj">🎯 <b>Projeto:</b> um dataset público do Kaggle, um modelo treinado no Colab e um README explicando o que os dados <i>não</i> cobrem.</div>
+    </div>
+    <div class="track c3">
+      <div class="when">Etapa 3 · 5º e 6º semestres</div>
+      <h3>IA generativa, LLMs e aplicações reais</h3>
+      <ul>
+        <li><b>Microsoft Generative AI for Beginners</b> — do prompt ao app, tradução pt-BR. <span class="pt">PT</span> <a href="https://github.com/microsoft/generative-ai-for-beginners" rel="noopener">GitHub</a></li>
+        <li><b>Hugging Face LLM Course</b> — transformers na prática. <span class="pt">PT parcial</span> <a href="https://huggingface.co/learn/llm-course/chapter1/1" rel="noopener">huggingface.co/learn</a></li>
+        <li><b>Practical Deep Learning (fast.ai)</b>. <span class="en">EN</span> <a href="https://course.fast.ai/" rel="noopener">course.fast.ai</a></li>
+        <li><b>Neural Networks: Zero to Hero (Karpathy)</b> — construa um GPT do zero. <span class="en">EN</span> <a href="https://karpathy.ai/zero-to-hero.html" rel="noopener">karpathy.ai</a></li>
+        <li><b>OWASP Top 10 para LLM</b> — segurança para quem vai pôr IA em produção. <span class="pt">PT</span> <a href="https://genai.owasp.org/llm-top-10/" rel="noopener">genai.owasp.org</a></li>
+      </ul>
+      <div class="proj">🎯 <b>Projeto:</b> um assistente com RAG sobre documentos públicos, que cita o trecho usado e se recusa a responder quando não encontra a informação. Bônus: teste-o contra prompt injection.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ GLOSSÁRIO -->
+<section id="glossario">
+  <div class="kick">Consulta rápida</div>
+  <h2>Glossário</h2>
+  <details open><summary>Termos essenciais</summary>
+  <dl class="gloss">
+    <dt>Machine learning</dt><dd>Subárea da IA em que o sistema aprende padrões a partir de exemplos, em vez de seguir regras escritas à mão.</dd>
+    <dt>LLM</dt><dd><i>Large Language Model</i>: modelo de linguagem treinado em grandes volumes de texto para prever o próximo token.</dd>
+    <dt>Token</dt><dd>Pedaço de texto (palavra, parte de palavra ou símbolo) que o modelo processa.</dd>
+    <dt>Temperatura</dt><dd>Parâmetro que controla o quanto o sorteio do próximo token é previsível ou arriscado.</dd>
+    <dt>Transformer / atenção</dt><dd>Arquitetura dos LLMs atuais; a atenção pondera quais partes do contexto importam para cada previsão.</dd>
+    <dt>Viés</dt><dd>Distorção sistemática no comportamento do modelo, geralmente herdada dos dados.</dd>
+    <dt>Prompt injection</dt><dd>Ataque que insere instruções no texto lido pelo modelo para contornar as regras do sistema.</dd>
+    <dt>Alucinação</dt><dd>Informação falsa ou inventada apresentada pelo modelo como verdadeira.</dd>
+  </dl></details>
+  <details><summary>Mais termos</summary>
+  <dl class="gloss">
+    <dt>Inteligência Artificial</dt><dd>Área que cria sistemas capazes de realizar tarefas que associamos à inteligência humana.</dd>
+    <dt>Deep learning</dt><dd>Machine learning com redes neurais de muitas camadas.</dd>
+    <dt>Rede neural</dt><dd>Modelo formado por camadas de unidades matemáticas conectadas por pesos ajustáveis.</dd>
+    <dt>Pesos / parâmetros</dt><dd>Os números internos que o treino ajusta. LLMs grandes têm bilhões deles.</dd>
+    <dt>Treino × inferência</dt><dd>Treino é ajustar o modelo com exemplos; inferência é usá-lo para prever dados novos.</dd>
+    <dt>Transferência de aprendizado</dt><dd>Reaproveitar um modelo já treinado e ajustar só a parte final para uma tarefa nova.</dd>
+    <dt>Overfitting</dt><dd>Quando o modelo “decora” os exemplos de treino e vai mal em dados novos.</dd>
+    <dt>Janela de contexto</dt><dd>Quantidade máxima de tokens que o modelo consegue considerar de uma vez.</dd>
+    <dt>Prompt de sistema</dt><dd>Instruções do desenvolvedor que definem o comportamento do assistente.</dd>
+    <dt>Jailbreak</dt><dd>Tentativa de fazer o modelo ignorar suas regras de segurança de modo geral.</dd>
+    <dt>RAG</dt><dd>Técnica que busca documentos relevantes e os entrega ao modelo antes de ele responder.</dd>
+    <dt>Fine-tuning</dt><dd>Treino adicional de um modelo já pronto para especializá-lo numa tarefa.</dd>
+    <dt>Agente</dt><dd>Sistema em que o LLM decide e executa ações usando ferramentas.</dd>
+  </dl></details>
+</section>
+
+<!-- ================================================================ REFERÊNCIAS -->
+<section id="refs">
+  <div class="kick">Fontes</div>
+  <h2>Referências</h2>
+  <h3>Conceitos e segurança</h3>
+  <ul class="refs">
+    <li>Vaswani, A. et al. <b>Attention Is All You Need</b>. 2017. <a href="https://arxiv.org/abs/1706.03762" rel="noopener">arxiv.org/abs/1706.03762</a></li>
+    <li>OWASP. <b>Top 10 for LLM Applications 2025</b>. <a href="https://genai.owasp.org/llm-top-10/" rel="noopener">genai.owasp.org/llm-top-10</a> · tradução pt-BR no <a href="https://github.com/OWASP/www-project-top-10-for-large-language-model-applications" rel="noopener">repositório oficial</a></li>
+    <li>Anthropic. <b>Prompt engineering overview</b>. <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview" rel="noopener">platform.claude.com/docs</a></li>
+  </ul>
+  <h3>Casos citados</h3>
+  <ul class="refs">
+    <li>SUV por US$ 1: <a href="https://incidentdatabase.ai/es/entities/chevrolet-of-watsonville" rel="noopener">AI Incident Database · Chevrolet of Watsonville</a></li>
+    <li>Mata v. Avianca: <a href="https://www.lawnext.com/2023/06/court-imposes-sanctions-on-lawyers-who-filed-bogus-cases-after-relying-on-chatgpt-for-legal-research.html" rel="noopener">LawNext (jun/2023)</a></li>
+    <li>Moffatt v. Air Canada: <a href="https://decisions.civilresolutionbc.ca/crt/crtd/en/525448/1/document.do" rel="noopener">Civil Resolution Tribunal (2024 BCCRT 149)</a></li>
+    <li>Bard e o James Webb: <a href="https://fortune.com/2023/02/08/google-bard-ai-mistake-ad-stock-price-market-cap/" rel="noopener">Fortune (fev/2023)</a></li>
+    <li>CNJ e jurisprudência inventada: <a href="https://olhardigital.com.br/2023/11/13/pro/ia-e-usada-por-juiz-que-sentencia-com-informacoes-falsas-cnj-investiga/" rel="noopener">Olhar Digital (nov/2023)</a></li>
+  </ul>
+  <h3>Ferramentas</h3>
+  <ul class="refs">
+    <li>Google. <b>Teachable Machine</b>. <a href="https://teachablemachine.withgoogle.com/" rel="noopener">teachablemachine.withgoogle.com</a></li>
+    <li>Lakera. <b>Gandalf</b>. <a href="https://gandalf.lakera.ai/" rel="noopener">gandalf.lakera.ai</a></li>
+  </ul>
+</section>
+
+<div class="star">
+  <div>
+    <h2>Curtiu o material?</h2>
+    <p>⭐ Dê uma estrela no repositório e siga para acompanhar os próximos.</p>
+  </div>
+  <div class="cta" style="margin:0">
+    <a class="btn" href="https://github.com/marlon-greg/ia-desmistificada">⭐ Dar uma estrela</a>
+    <a class="btn" href="https://github.com/marlon-greg" style="background:var(--surface-2);color:var(--ink)">github.com/marlon-greg</a>
+  </div>
+</div>
+
+</main>
+
+<footer><div class="wrap">
+  Material da palestra <b>IA por dentro</b> · Semana de Tecnologia · Análise e Desenvolvimento de Sistemas · FATEC Indaiatuba · outubro de 2026 · <a href="https://github.com/marlon-greg">Prof. Marlon Greg</a>.<br>
+  Conteúdo sob licença <a href="https://creativecommons.org/licenses/by/4.0/deed.pt_BR" rel="noopener">CC BY 4.0</a>: pode usar e adaptar, citando a fonte. Links verificados em outubro de 2026.
+</div></footer>
+
+<script>
+  // destaca a seção atual no menu
+  (function () {
+    var links = [].slice.call(document.querySelectorAll("nav.toc a"));
+    var secs = links.map(function (a) { return document.querySelector(a.getAttribute("href")); });
+    function on() {
+      var y = window.scrollY + 120, cur = 0;
+      secs.forEach(function (s, i) { if (s && s.offsetTop <= y) cur = i; });
+      links.forEach(function (a, i) { a.classList.toggle("on", i === cur); });
+    }
+    window.addEventListener("scroll", on, { passive: true }); on();
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Passo a passo · Teachable Machine</title>
+<link rel="stylesheet" href="pdf.css">
+<style>
+  .mock svg text { font-family: "Inter", "Segoe UI", sans-serif; }
+  .key { display: grid; grid-template-columns: 22pt 1fr; gap: 4pt 8pt; font-size: 9.4pt; margin-top: 6pt; }
+  .key b.dot { width: 16pt; height: 16pt; border-radius: 50%; background: var(--b2); color: #fff; display: grid; place-items: center; font-size: 8.5pt; }
+</style>
+</head>
+<body>
+
+<!-- ================================================================ CAPA -->
+<div class="cover c2">
+  <div class="blob" style="width:150mm;height:150mm;right:-60mm;top:-60mm;background:#33245e"></div>
+  <div class="blob" style="width:110mm;height:110mm;left:-50mm;bottom:-40mm;background:#1b2550"></div>
+  <div class="eyebrow">Passo a passo · Prática do Bloco 2</div>
+  <h1>Treine sua própria IA com o <b>Teachable Machine</b></h1>
+  <p class="lead">Do zero a um modelo que reconhece gestos pela webcam, em cerca de 15 minutos, sem instalar nada e sem escrever código. E depois: como ver o viés acontecer e como levar o modelo para um site.</p>
+  <svg class="art" style="opacity:1;bottom:58mm;right:12mm;width:105mm" viewBox="0 0 420 260" aria-hidden="true">
+    <rect x="10" y="20" width="110" height="80" rx="12" fill="#1c2440" stroke="#60a5fa" stroke-width="3"/>
+    <text x="65" y="72" font-size="38" text-anchor="middle">👍</text>
+    <rect x="10" y="130" width="110" height="80" rx="12" fill="#1c2440" stroke="#60a5fa" stroke-width="3"/>
+    <text x="65" y="182" font-size="38" text-anchor="middle">✋</text>
+    <path d="M130 60 C 170 60, 170 115, 200 115 M130 170 C 170 170, 170 115, 200 115" stroke="#a78bfa" stroke-width="4" fill="none"/>
+    <rect x="200" y="80" width="90" height="70" rx="14" fill="#a78bfa"/>
+    <text x="245" y="122" font-size="18" font-weight="700" text-anchor="middle" fill="#0b1020">TREINO</text>
+    <path d="M290 115 L 320 115" stroke="#f472b6" stroke-width="4"/>
+    <rect x="320" y="60" width="95" height="110" rx="12" fill="#1c2440" stroke="#f472b6" stroke-width="3"/>
+    <rect x="332" y="80" width="70" height="16" rx="5" fill="#f472b6"/>
+    <rect x="332" y="106" width="18" height="16" rx="5" fill="#f472b6"/>
+    <text x="367" y="155" font-size="13" fill="#eef2ff" text-anchor="middle">confiança</text>
+  </svg>
+  <div class="meta"><span>Palestra <b>IA por dentro</b> · Semana de Tecnologia · ADS · FATEC Indaiatuba · outubro de 2026</span><span><b>Prof. Marlon Greg</b> · github.com/marlon-greg</span></div>
+</div>
+
+<!-- ================================================================ SUMÁRIO -->
+<div class="toc c2">
+  <div class="kick">Sumário</div>
+  <h2>O caminho</h2>
+  <ol>
+    <li>O que é e do que você precisa <small>antes de começar</small></li>
+    <li>Criar o projeto <small>Get Started → Image Project</small></li>
+    <li>Criar as classes <small>o que o modelo vai diferenciar</small></li>
+    <li>Coletar exemplos <small>webcam ou upload</small></li>
+    <li>Treinar <small>Train Model</small></li>
+    <li>Testar <small>Preview e barras de confiança</small></li>
+    <li>Ajustes avançados <small>epochs, batch size, learning rate</small></li>
+    <li>Experimento de viés <small>ver o modelo aprender a coisa errada</small></li>
+    <li>Salvar e exportar <small>Drive, link, TensorFlow.js</small></li>
+    <li>Áudio e pose <small>os outros tipos de projeto</small></li>
+    <li>Ideias de projetos <small>para fazer em casa</small></li>
+  </ol>
+  <div class="box tip" style="margin-top:16pt">
+    <h4>🌐 A interface é em inglês</h4>
+    <p style="margin:0">Neste guia, todo botão aparece assim: <span class="ui">Train Model</span> <span class="tr">(treinar modelo)</span> — o nome exato que você vai ver na tela, seguido da tradução. As ilustrações são <b>esquemas simplificados</b> da tela, não capturas reais: o visual do site pode mudar um pouco com o tempo.</p>
+  </div>
+</div>
+
+<!-- ================================================================ 1 -->
+<section class="ch c2" style="break-before:auto">
+  <div class="chead"><div class="kick">Passo 1</div><h2>O que é e do que você precisa</h2></div>
+  <p>O <b>Teachable Machine</b> é uma ferramenta gratuita do Google para treinar modelos de machine learning direto no navegador. Você mostra exemplos, clica em treinar e, em segundos, tem um modelo que reconhece <b>imagens</b>, <b>sons</b> ou <b>poses do corpo</b>.</p>
+  <p>Por trás, ele usa <b>transferência de aprendizado</b>: parte de um modelo que já foi treinado com muitas imagens e já reconhece formas, bordas e texturas. Você só ensina a parte final — por isso poucos exemplos bastam.</p>
+  <div class="grid2">
+    <div class="box ok"><h4>✅ Você precisa de</h4><ul style="margin:0">
+      <li>Um computador com <b>webcam</b> (o celular até abre o site, mas a experiência é bem melhor no computador)</li>
+      <li>Navegador atualizado (Chrome, Edge ou Firefox)</li>
+      <li>15 minutos</li></ul></div>
+    <div class="box"><h4>🔒 Seus dados</h4><p style="margin:0">O treino acontece <b>no seu navegador</b>: as imagens da webcam não são enviadas para treinar nada fora do seu computador. Elas só saem daí se você salvar o projeto no Google Drive ou publicar o modelo.</p></div>
+  </div>
+  <div class="box"><h4>🎯 O que vamos construir</h4>
+  <p style="margin:0">Um modelo que reconhece três situações pela webcam: <b>Joinha 👍</b>, <b>Mão aberta ✋</b> e <b>Nada</b> (só você, sem gesto). É o mesmo que fizemos ao vivo na palestra.</p></div>
+
+  <!-- ================================================================ 2 -->
+  <div class="chead" style="margin-top:20pt"><div class="kick">Passo 2</div><h2>Criar o projeto</h2></div>
+  <ol class="steps">
+    <li>Acesse <b>teachablemachine.withgoogle.com</b>.</li>
+    <li>Clique em <span class="ui">Get Started</span> <span class="tr">(começar)</span>.</li>
+    <li>Na tela <i>New Project</i> <span class="tr">(novo projeto)</span>, escolha <span class="ui g">Image Project</span> <span class="tr">(projeto de imagem)</span>.</li>
+    <li>Escolha <span class="ui g">Standard image model</span> <span class="tr">(modelo de imagem padrão)</span>. A outra opção, <i>Embedded image model</i>, é para microcontroladores — não precisamos dela.</li>
+  </ol>
+  <div class="mock"><div class="cap">Esquema · tela “New Project”</div>
+  <svg viewBox="0 0 600 170">
+    <rect x="0" y="0" width="600" height="170" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="20" y="30" font-size="15" font-weight="700" fill="#202124">New Project</text>
+    <g>
+      <rect x="20" y="48" width="175" height="105" rx="10" fill="#e8f0fe" stroke="#1a73e8" stroke-width="3"/>
+      <text x="107" y="95" font-size="30" text-anchor="middle">🖼️</text>
+      <text x="107" y="130" font-size="14" font-weight="700" text-anchor="middle" fill="#202124">Image Project</text>
+      <rect x="212" y="48" width="175" height="105" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+      <text x="300" y="95" font-size="30" text-anchor="middle">🎙️</text>
+      <text x="300" y="130" font-size="14" font-weight="700" text-anchor="middle" fill="#202124">Audio Project</text>
+      <rect x="404" y="48" width="175" height="105" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+      <text x="491" y="95" font-size="30" text-anchor="middle">🧍</text>
+      <text x="491" y="130" font-size="14" font-weight="700" text-anchor="middle" fill="#202124">Pose Project</text>
+    </g>
+    <circle cx="190" cy="52" r="12" fill="#7c3aed"/><text x="190" y="57" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  </svg>
+  <div class="key"><b class="dot">1</b><span>Clique em <b>Image Project</b> e depois em <b>Standard image model</b>.</span></div></div>
+</section>
+
+<!-- ================================================================ 3 + 4 -->
+<section class="ch c2">
+  <div class="chead"><div class="kick">Passo 3</div><h2>Criar as classes</h2>
+  <p>Uma <b>classe</b> é cada categoria que o modelo vai aprender a diferenciar.</p></div>
+  <p>A tela de trabalho tem três colunas, da esquerda para a direita: <b>classes</b> (seus exemplos) → <b>treino</b> → <b>teste</b>.</p>
+  <div class="mock"><div class="cap">Esquema · tela de trabalho do projeto de imagem</div>
+  <svg viewBox="0 0 600 300">
+    <rect x="0" y="0" width="600" height="300" rx="10" fill="#f1f3f4" stroke="#cbd5e1"/>
+    <!-- classes -->
+    <rect x="16" y="16" width="250" height="100" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="30" y="40" font-size="14" font-weight="700" fill="#202124">Class 1 ✎</text>
+    <text x="30" y="62" font-size="11" fill="#5f6368">Add Image Samples:</text>
+    <rect x="30" y="72" width="80" height="32" rx="6" fill="#e8f0fe"/><text x="70" y="93" font-size="12" font-weight="700" text-anchor="middle" fill="#1a73e8">📷 Webcam</text>
+    <rect x="120" y="72" width="80" height="32" rx="6" fill="#e8f0fe"/><text x="160" y="93" font-size="12" font-weight="700" text-anchor="middle" fill="#1a73e8">⤒ Upload</text>
+    <rect x="16" y="128" width="250" height="100" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="30" y="152" font-size="14" font-weight="700" fill="#202124">Class 2 ✎</text>
+    <text x="30" y="174" font-size="11" fill="#5f6368">Add Image Samples:</text>
+    <rect x="30" y="184" width="80" height="32" rx="6" fill="#e8f0fe"/><text x="70" y="205" font-size="12" font-weight="700" text-anchor="middle" fill="#1a73e8">📷 Webcam</text>
+    <rect x="120" y="184" width="80" height="32" rx="6" fill="#e8f0fe"/><text x="160" y="205" font-size="12" font-weight="700" text-anchor="middle" fill="#1a73e8">⤒ Upload</text>
+    <rect x="16" y="240" width="250" height="44" rx="10" fill="#fff" stroke="#94a3b8" stroke-dasharray="6 5"/>
+    <text x="141" y="267" font-size="13" font-weight="700" text-anchor="middle" fill="#5f6368">⊕ Add a class</text>
+    <!-- treino -->
+    <path d="M266 130 L 300 130" stroke="#94a3b8" stroke-width="2"/>
+    <rect x="300" y="90" width="120" height="90" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="360" y="114" font-size="13" font-weight="700" text-anchor="middle" fill="#202124">Training</text>
+    <rect x="315" y="124" width="90" height="28" rx="6" fill="#1a73e8"/><text x="360" y="143" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">Train Model</text>
+    <text x="360" y="170" font-size="11" text-anchor="middle" fill="#5f6368">Advanced ▾</text>
+    <path d="M420 130 L 450 130" stroke="#94a3b8" stroke-width="2"/>
+    <!-- preview -->
+    <rect x="450" y="40" width="134" height="200" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="517" y="64" font-size="13" font-weight="700" text-anchor="middle" fill="#202124">Preview</text>
+    <text x="517" y="84" font-size="11" text-anchor="middle" fill="#5f6368">Input ⏻ ON</text>
+    <rect x="470" y="94" width="94" height="66" rx="6" fill="#e2e8f0"/><text x="517" y="134" font-size="22" text-anchor="middle">🙂</text>
+    <text x="462" y="180" font-size="11" fill="#5f6368">Output</text>
+    <rect x="462" y="188" width="110" height="14" rx="4" fill="#e2e8f0"/><rect x="462" y="188" width="88" height="14" rx="4" fill="#f9ab00"/>
+    <rect x="462" y="208" width="110" height="14" rx="4" fill="#e2e8f0"/><rect x="462" y="208" width="14" height="14" rx="4" fill="#e8710a"/>
+    <!-- marcadores -->
+    <circle cx="112" cy="32" r="11" fill="#7c3aed"/><text x="112" y="37" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+    <circle cx="246" cy="262" r="11" fill="#7c3aed"/><text x="246" y="267" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+    <circle cx="218" cy="88" r="11" fill="#7c3aed"/><text x="218" y="93" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+    <circle cx="410" cy="124" r="11" fill="#7c3aed"/><text x="410" y="129" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+    <circle cx="578" cy="180" r="11" fill="#7c3aed"/><text x="578" y="185" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+  </svg>
+  <div class="key">
+    <b class="dot">1</b><span>Clique no lápis ✎ ao lado de “Class 1” para renomear a classe.</span>
+    <b class="dot">2</b><span><span class="ui g">Add a class</span> <span class="tr">(adicionar uma classe)</span> cria mais uma categoria.</span>
+    <b class="dot">3</b><span><span class="ui g">Webcam</span> grava exemplos pela câmera; <span class="ui g">Upload</span> <span class="tr">(enviar)</span> usa imagens do computador.</span>
+    <b class="dot">4</b><span><span class="ui">Train Model</span> <span class="tr">(treinar modelo)</span> e o menu <span class="ui g">Advanced</span> <span class="tr">(avançado)</span>.</span>
+    <b class="dot">5</b><span><span class="ui g">Preview</span> <span class="tr">(prévia)</span>: as barras de <span class="ui g">Output</span> <span class="tr">(saída)</span> mostram a confiança em cada classe.</span>
+  </div></div>
+  <ol class="steps">
+    <li>Renomeie <b>Class 1</b> para <b>Joinha</b> e <b>Class 2</b> para <b>Mão aberta</b>.</li>
+    <li>Clique em <span class="ui g">Add a class</span> e crie a classe <b>Nada</b>.</li>
+  </ol>
+  <div class="box tip"><h4>💡 Por que a classe “Nada”?</h4><p style="margin:0">O modelo <b>sempre</b> escolhe uma das classes que conhece. Sem a classe “Nada”, quando você estiver parado ele vai dizer, com confiança, que é “Joinha” ou “Mão aberta”. A classe de fundo ensina a ele o que é “nenhum gesto”.</p></div>
+
+</section>
+<section class="ch c2">
+  <div class="chead"><div class="kick">Passo 4</div><h2>Coletar exemplos</h2>
+  <p>Esta é a etapa que mais importa. A qualidade do modelo depende quase toda daqui.</p></div>
+  <ol class="steps">
+    <li>Na classe <b>Joinha</b>, clique em <span class="ui g">Webcam</span>. Se o navegador pedir permissão para usar a câmera, permita.</li>
+    <li>Faça o gesto e <b>segure</b> o botão <span class="ui">Hold to Record</span> <span class="tr">(segure para gravar)</span>. Enquanto você segura, ele tira várias fotos por segundo.</li>
+    <li>Junte de <b>50 a 100 imagens</b>. Enquanto grava, <b>varie</b>: aproxime e afaste a mão, mude o ângulo, use a mão esquerda e a direita.</li>
+    <li>Repita para <b>Mão aberta</b> e para <b>Nada</b> (você parado, mãos abaixadas, olhando para a câmera).</li>
+  </ol>
+  <div class="grid2">
+    <div class="box ok"><h4>✅ Bons exemplos</h4><ul style="margin:0">
+      <li>Quantidade parecida em todas as classes</li>
+      <li>Variedade de ângulo, distância e posição</li>
+      <li>Se possível, mais de uma pessoa e mais de um fundo</li>
+      <li>Luz parecida com a de onde você vai usar o modelo</li></ul></div>
+    <div class="box warn"><h4>⚠️ Armadilhas</h4><ul style="margin:0">
+      <li>Uma classe com 200 fotos e outra com 20</li>
+      <li>Todas as fotos idênticas (mão parada no mesmo lugar)</li>
+      <li>Mudar de roupa ou de lugar só numa das classes — o modelo aprende a roupa, não o gesto</li></ul></div>
+  </div>
+  <p><b>Prefere usar fotos prontas?</b> Clique em <span class="ui g">Upload</span> e arraste imagens do computador, ou escolha uma pasta do Google Drive. Funciona para qualquer coisa: tipos de folha, raças de cachorro, peças com defeito e sem defeito.</p>
+  <p>Errou uma foto? Passe o mouse sobre a miniatura e clique na lixeira para apagar.</p>
+</section>
+
+<!-- ================================================================ 5 + 6 -->
+<section class="ch c2">
+  <div class="chead"><div class="kick">Passo 5</div><h2>Treinar</h2></div>
+  <ol class="steps">
+    <li>Clique em <span class="ui">Train Model</span> <span class="tr">(treinar modelo)</span>.</li>
+    <li>Aparece uma mensagem de preparação dos dados e depois o progresso do treino.</li>
+    <li><b>Não troque de aba</b> e não minimize o navegador até terminar. Muitos navegadores economizam processamento em abas que não estão visíveis, e o treino pode travar ou ficar muito lento.</li>
+  </ol>
+  <div class="box"><h4>🧠 O que está acontecendo agora</h4>
+  <p style="margin:0">O modelo olha cada exemplo, faz uma previsão, compara com a resposta certa (a classe onde você colocou a foto) e ajusta seus <b>pesos</b> um pouquinho para errar menos. Ele repete esse ciclo várias vezes sobre todas as imagens. Como só a parte final do modelo está sendo ajustada (transferência de aprendizado), isso leva segundos.</p></div>
+
+  <div class="chead" style="margin-top:18pt"><div class="kick">Passo 6</div><h2>Testar</h2></div>
+  <ol class="steps">
+    <li>Quando o treino termina, a área <span class="ui g">Preview</span> <span class="tr">(prévia)</span> liga a webcam sozinha.</li>
+    <li>Faça cada gesto e observe as barras de <span class="ui g">Output</span> <span class="tr">(saída)</span>: cada uma mostra a <b>confiança</b> do modelo em uma classe, de 0% a 100%.</li>
+    <li>Teste casos difíceis: gesto pela metade, mão muito perto, mão muito longe, outra pessoa, outra iluminação.</li>
+    <li>Para testar com uma imagem do computador, troque a entrada de <i>Webcam</i> para <i>File</i> <span class="tr">(arquivo)</span> no seletor acima da imagem. O botão <span class="ui g">Input</span> <span class="tr">(entrada)</span> liga e desliga a câmera.</li>
+  </ol>
+  <div class="box tip"><h4>💡 Confiança não é certeza</h4><p style="margin:0">Uma barra em 98% quer dizer que, para o modelo, aquela classe é muito mais parecida com o que ele está vendo do que as outras. Não quer dizer que ele esteja certo. Se ele está confiante e errado, o problema quase sempre está nos dados de treino.</p></div>
+
+  <div class="box ex"><h4>✏️ Desafio rápido</h4>
+  <p style="margin:0">Descubra pelo menos <b>duas situações</b> em que o seu modelo erra com confiança alta. Para cada uma, pense: que exemplos estavam faltando no treino? Adicione esses exemplos, treine de novo e veja se melhorou.</p></div>
+</section>
+
+<!-- ================================================================ 7 + 8 -->
+<section class="ch c2">
+  <div class="chead"><div class="kick">Passo 7</div><h2>Ajustes avançados</h2>
+  <p>Clique em <span class="ui g">Advanced</span> <span class="tr">(avançado)</span>, abaixo do botão de treino. Os valores padrão funcionam bem; mexa só para experimentar.</p></div>
+  <table>
+    <tr><th>Opção</th><th>Padrão</th><th>O que significa</th><th>Se aumentar…</th></tr>
+    <tr><td><b>Epochs</b> <span class="tr">(épocas)</span></td><td>50</td><td>Quantas vezes o modelo passa por <b>todas</b> as imagens de treino.</td><td>Aprende mais os exemplos — mas, demais, pode “decorar” (overfitting).</td></tr>
+    <tr><td><b>Batch Size</b> <span class="tr">(tamanho do lote)</span></td><td>16</td><td>Quantas imagens ele olha antes de cada ajuste dos pesos.</td><td>Ajustes mais estáveis e em menor número por época.</td></tr>
+    <tr><td><b>Learning Rate</b> <span class="tr">(taxa de aprendizado)</span></td><td>0.001</td><td>O tamanho de cada ajuste nos pesos.</td><td>Aprende mais rápido, mas pode “passar do ponto” e ficar instável.</td></tr>
+  </table>
+  <p>Em <span class="ui g">Under the hood</span> <span class="tr">(por baixo do capô)</span> aparecem gráficos de <b>acurácia</b> e <b>perda</b> (<i>loss</i>) por época, e a acurácia por classe. Repare que o site separa automaticamente uma parte das suas imagens para <b>teste</b> — exatamente a ideia de conjunto de treino e conjunto de teste. <span class="ui g">Reset Defaults</span> <span class="tr">(restaurar padrões)</span> volta aos valores originais.</p>
+  <div class="box teste"><h4>🧪 Experimente</h4><p style="margin:0">Treine com <b>5 epochs</b> e depois com <b>200</b>. Compare como o modelo se comporta com gestos que não estavam no treino. Mais treino é sempre melhor?</p></div>
+
+  <div class="chead" style="margin-top:18pt"><div class="kick">Passo 8</div><h2>Experimento de viés</h2>
+  <p>O mesmo experimento da palestra. Ele mostra, em miniatura, um dos maiores problemas da IA no mundo real.</p></div>
+  <ol class="steps">
+    <li>Crie um projeto novo. Treine <b>Joinha</b> e <b>Mão aberta</b> com exemplos de <b>uma só pessoa</b>, num <b>fundo só</b>.</li>
+    <li>Agora, para deixar o efeito bem visível: grave a classe Joinha usando uma camiseta <b>clara</b> e a classe Mão aberta usando um casaco <b>escuro</b>.</li>
+    <li>Treine e teste trocando de roupa: faça joinha usando o casaco escuro. O que o modelo diz?</li>
+    <li>Peça para outra pessoa testar, em outro lugar. Anote quando ele erra.</li>
+    <li>Adicione nas mesmas classes exemplos com as duas roupas, de outra pessoa e de outro fundo. Treine de novo e compare.</li>
+  </ol>
+  <div class="box resumo"><h4>📌 O que você acabou de ver</h4>
+  <p style="margin:0">O modelo não sabe o que você “quis” ensinar. Ele aprende <b>qualquer diferença</b> que separe as classes nos dados — e a roupa era a diferença mais fácil. Em sistemas reais (crédito, contratação, reconhecimento facial), dados pouco variados geram o mesmo tipo de erro, só que com pessoas de verdade sendo prejudicadas. <b>Modelo bom vem de dados bons.</b></p></div>
+</section>
+
+<!-- ================================================================ 9 -->
+<section class="ch c2">
+  <div class="chead"><div class="kick">Passo 9</div><h2>Salvar e exportar</h2></div>
+  <h3>Salvar o projeto (para continuar depois)</h3>
+  <p>Clique no menu <b>☰</b> no canto superior esquerdo:</p>
+  <ul>
+    <li><span class="ui g">Save project to Drive</span> <span class="tr">(salvar projeto no Drive)</span> — guarda tudo, inclusive as imagens, no seu Google Drive.</li>
+    <li><span class="ui g">Download project as file</span> <span class="tr">(baixar projeto como arquivo)</span> — um arquivo que você abre depois com <i>Open project from file</i>.</li>
+  </ul>
+  <h3>Exportar o modelo (para usar em outro lugar)</h3>
+  <ol class="steps">
+    <li>Na área Preview, clique em <span class="ui">Export Model</span> <span class="tr">(exportar modelo)</span>.</li>
+    <li>Na aba <b>Tensorflow.js</b>, escolha <i>Upload (shareable link)</i> <span class="tr">(enviar, com link compartilhável)</span> e clique em <span class="ui">Upload my model</span> <span class="tr">(enviar meu modelo)</span>. O site gera um link público para o modelo. Só o modelo treinado é enviado, não as suas fotos.</li>
+    <li>Logo abaixo aparece um <b>código de exemplo</b> pronto para copiar. As outras abas oferecem o modelo para <b>Tensorflow</b> (Python) e <b>Tensorflow Lite</b> (celulares e dispositivos pequenos).</li>
+  </ol>
+  <div class="mock"><div class="cap">Esquema · janela “Export your model”</div>
+  <svg viewBox="0 0 600 150">
+    <rect x="0" y="0" width="600" height="150" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="20" y="28" font-size="14" font-weight="700" fill="#202124">Export your model to use it in projects.</text>
+    <rect x="20" y="42" width="120" height="28" rx="6" fill="#e8f0fe"/><text x="80" y="61" font-size="12" font-weight="700" text-anchor="middle" fill="#1a73e8">Tensorflow.js</text>
+    <text x="190" y="61" font-size="12" text-anchor="middle" fill="#5f6368">Tensorflow</text>
+    <text x="300" y="61" font-size="12" text-anchor="middle" fill="#5f6368">Tensorflow Lite</text>
+    <circle cx="30" cy="94" r="6" fill="#1a73e8"/><text x="44" y="98" font-size="12" fill="#202124">Upload (shareable link)</text>
+    <circle cx="210" cy="94" r="6" fill="none" stroke="#5f6368"/><text x="224" y="98" font-size="12" fill="#202124">Download</text>
+    <rect x="420" y="80" width="160" height="30" rx="6" fill="#1a73e8"/><text x="500" y="100" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">Upload my model</text>
+    <text x="20" y="134" font-size="11" fill="#5f6368">Your sharable link: https://teachablemachine.withgoogle.com/models/…</text>
+  </svg></div>
+  <h3>Desafio extra: o seu modelo num site</h3>
+  <p>Com o link do modelo, esta página mínima liga a webcam e mostra a classe mais provável. Salve como <code>index.html</code>, troque o endereço do modelo e abra num servidor local (por exemplo, a extensão <i>Live Server</i> do VS Code).</p>
+<pre style="break-inside:auto">&lt;div id="saida"&gt;Carregando…&lt;/div&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  const URL = "https://teachablemachine.withgoogle.com/models/SEU_MODELO/"; // troque aqui
+  let model, webcam;
+
+  async function init() {
+    model = await tmImage.load(URL + "model.json", URL + "metadata.json");
+    webcam = new tmImage.Webcam(300, 300, true); // largura, altura, espelhar
+    await webcam.setup();                        // pede permissão da câmera
+    await webcam.play();
+    document.body.appendChild(webcam.canvas);
+    requestAnimationFrame(loop);
+  }
+
+  async function loop() {
+    webcam.update();
+    const prev = await model.predict(webcam.canvas); // [{ className, probability }, ...]
+    const top = prev.reduce((a, b) =&gt; (b.probability &gt; a.probability ? b : a));
+    document.getElementById("saida").textContent =
+      top.className + " · " + Math.round(top.probability * 100) + "%";
+    requestAnimationFrame(loop);
+  }
+
+  init();
+&lt;/script&gt;</pre>
+  <p style="font-size:9.4pt;color:var(--ink-2)">O código de exemplo oficial, gerado na própria janela de exportação, também tem uma versão para <b>p5.js</b>. Use-o como referência caso as bibliotecas mudem de versão.</p>
+</section>
+
+<!-- ================================================================ 10 + 11 -->
+<section class="ch c2">
+  <div class="chead"><div class="kick">Passo 10</div><h2>Áudio e pose</h2>
+  <p>O fluxo é o mesmo — classes, exemplos, treino, teste — muda só o tipo de dado.</p></div>
+  <div class="grid2">
+    <div class="box"><h4>🎙️ Audio Project <span class="tr">(projeto de áudio)</span></h4>
+    <ul style="margin:0">
+      <li>Já começa com a classe <b>Background Noise</b> <span class="tr">(ruído de fundo)</span>: grave o silêncio do ambiente. Ela exige mais amostras que as outras.</li>
+      <li>Cada amostra é um trecho curto de som, gravado pelo microfone.</li>
+      <li>Ideias: reconhecer palmas, assobio, “sim” e “não”, o som de um eletrodoméstico.</li></ul></div>
+    <div class="box"><h4>🧍 Pose Project <span class="tr">(projeto de pose)</span></h4>
+    <ul style="margin:0">
+      <li>Em vez da imagem inteira, o modelo usa a posição de <b>pontos do corpo</b> (ombros, cotovelos, joelhos…), detectados pela webcam.</li>
+      <li>Como olha o “esqueleto”, sofre menos com roupa e fundo.</li>
+      <li>Ideias: reconhecer postura correta ao sentar, poses de yoga, movimentos de exercício.</li></ul></div>
+  </div>
+  <div class="box tip"><h4>🔎 Para pensar</h4><p style="margin:0">Por que um modelo de <b>pose</b> tende a sofrer menos com o viés da roupa do que um modelo de <b>imagem</b>? Que tipo de viés ele ainda pode ter? (Dica: pense em quem gravou os exemplos — altura, tipo de corpo, mobilidade.)</p></div>
+
+</section>
+<section class="ch c2">
+  <div class="chead"><div class="kick">Passo 11</div><h2>Ideias de projetos para fazer em casa</h2></div>
+  <div class="grid3">
+    <div class="card"><b class="t">♻️ Lixo reciclável</b><small>Iniciante</small><br>Classes: plástico, papel, metal, orgânico. Use fotos de objetos reais em vários fundos.</div>
+    <div class="card"><b class="t">😷 Uso de máscara ou óculos</b><small>Iniciante</small><br>Duas classes. Ótimo para ver viés: teste com pessoas que não estavam no treino.</div>
+    <div class="card"><b class="t">✊✋✌️ Pedra, papel e tesoura</b><small>Intermediário</small><br>Exporte para TensorFlow.js e faça o computador jogar contra você numa página web.</div>
+    <div class="card"><b class="t">🪑 Postura no computador</b><small>Intermediário</small><br>Pose Project com “postura boa” e “postura ruim”; avise quando você relaxar demais.</div>
+    <div class="card"><b class="t">👏 Controle por som</b><small>Intermediário</small><br>Audio Project: palmas avançam slides; assobio volta.</div>
+    <div class="card"><b class="t">🔧 Controle de qualidade</b><small>Avançado</small><br>Peças boas × com defeito. Escreva um relatório: onde ele erra e quais dados faltam.</div>
+  </div>
+  <div class="box ok" style="margin-top:12pt"><h4>🚀 Leve para o portfólio</h4>
+  <p style="margin:0">Publique a página do seu modelo no <b>GitHub Pages</b> e escreva um <b>README</b> com: o problema, as classes, quantas imagens usou, onde o modelo erra e por quê. Mostrar que você entende os limites do modelo vale mais do que dizer que ele acerta 99%.</p></div>
+  <div class="endnote">Passo a passo da prática do Bloco 2 da palestra <b>IA por dentro</b> · Semana de Tecnologia · ADS · FATEC Indaiatuba · outubro de 2026 · Prof. Marlon Greg (github.com/marlon-greg).<br>
+  Material completo: <b>marlon-greg.github.io/ia-desmistificada</b> · Conteúdo sob CC BY 4.0. Teachable Machine é uma ferramenta do Google; a interface pode mudar com o tempo.</div>
+</section>
+
+</body>
+</html>
